@@ -2,9 +2,31 @@
 
 import sys
 
+
 def reach(adj, x, y):
-    #write your code here
-    return 0
+    nodes = [Node(i) for i in range(len(adj))]
+    for i in range(len(nodes)):
+        for j in adj[i]:
+            nodes[i].a.append(nodes[j])
+    nodes[x].explore()
+    if nodes[y].found:
+        return 1
+    else:
+        return 0
+
+
+class Node:
+    def __init__(self, index):
+        self.a = []
+        self.x = index
+        self.found = False
+
+    def explore(self):
+        self.found = True
+        for i in self.a:
+            if not i.found:
+                i.explore()
+
 
 if __name__ == '__main__':
     input = sys.stdin.read()
