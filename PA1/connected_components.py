@@ -4,9 +4,30 @@ import sys
 
 
 def number_of_components(adj):
+    nodes = [Node(i) for i in range(len(adj))]
+    for i in range(len(nodes)):
+        for j in adj[i]:
+            nodes[i].a.append(nodes[j])
     result = 0
-    #write your code here
+    for i in nodes:
+        if not i.found:
+            i.explore()
+            result += 1
     return result
+
+
+class Node:
+    def __init__(self, index):
+        self.a = []
+        self.x = index
+        self.found = False
+
+    def explore(self):
+        self.found = True
+        for i in self.a:
+            if not i.found:
+                i.explore()
+
 
 if __name__ == '__main__':
     input = sys.stdin.read()
