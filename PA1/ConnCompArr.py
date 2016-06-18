@@ -5,22 +5,22 @@ import sys
 
 class Tree:
     def __init__(self, adj):
-        self.preOrd = [0] * len(adj)
-        self.postOrd = self.preOrd
+        self.preOrd = [-1] * len(adj)
+        self.postOrd = [-1] * len(adj)
         self.found = [False] * len(adj)
         self.adj = adj
         self.count = 0
         self.size = len(adj)
 
     def explore(self, i):
+        self.found[i] = True
+        self.preOrd[i] = self.count
+        self.count += 1
         for j in self.adj[i]:
             if not self.found[j]:
-                self.preOrd[j] = self.count
-                self.count += 1
-                self.found[j] = True
                 self.explore(j)
-                self.postOrd[j] = self.count
-                self.count += 1
+        self.postOrd[i] = self.count
+        self.count += 1
 
     def explored(self):
         return self.count == self.size
