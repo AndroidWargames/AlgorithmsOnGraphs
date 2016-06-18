@@ -2,6 +2,7 @@
 
 import sys
 
+
 class Tree:
     def __init__(self, adj):
         self.preOrd = [-1] * len(adj)
