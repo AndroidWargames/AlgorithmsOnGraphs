@@ -2,7 +2,13 @@
 
 import sys
 
+
 class BFSTree:
+    # This class defines the connections of the tree.
+    # It requires an initialization node (s), thereafter
+    # (upon exploration) assigns distances and enqueues them
+    # for further exploration
+
     def __init__(self, adj, s):
         self.size = len(adj)
         self.dist = [self.size] * self.size
