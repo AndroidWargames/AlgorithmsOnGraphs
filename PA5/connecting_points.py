@@ -9,20 +9,22 @@ def minimum_distance(x, y):
     lists = [[i] for i in range(len(x))]
     result = 0
 
-    # this will find distances for every unique combination of points
-    # and then create nodes for the binary tree and add them to the
-    # tree
+    # this will find distances for every unique combination of points,
+    # create edge objects for each, and then add that edge object and distance
+    # to the binary tree as a node
     for i in range(len(x) - 1):
         for j in range(i+1,len(x)):
             d = math.sqrt((x[i]-x[j])**2 + (y[i]-y[j])**2)
-            bt.addNode(d, i, j)
+            e = Edge(d, i, j)
+            bt.addNode(e, e.dist)
 
     # this loop will iterate until a number of edges 1 fewer than the
     # number of points is discovered
     z = 0
     while z < len(x) - 1:
         # get minimum value, end points
-        d, a, b = bt.popMin()
+        e = bt.popMin()
+        d, a, b = e.dist, e.a, e.b
         # test if nodes are part of same sub tree, merge subtrees
         if find[a] != find[b]:
             # add dist to result
@@ -41,26 +43,34 @@ def minimum_distance(x, y):
     return result
 
 
+class Edge:
+    def __init__(self, d, a, b):
+        self.a = a
+        self.b = b
+        self.dist = d
+
 # basic, unbalanced binary sort tree; worst case is as slow as array implementation
-# nodes of tree represent edges sorted by distance. Each node also holds endpoints
-# and key values (for some reason)
+# nodes of tree represent edges sorted by distance. Each node holds key value
+# that references an object in BinTree's 'objs' list
+
+
 class BinTree:
     def __init__(self):
         self.count = 0
         self.root = self.Node
+        self.objs = []
 
     class Node:
-        def __init__(self, dist, a, b, k):
-            self.dist = dist
-            self.a = a
-            self.b = b
+        def __init__(self, val, k):
+            self.val = val
             self.key = k
             self.parent = -1
             self.left = -1
             self.right = -1
 
-    def addNode(self, dist, a, b):
-        n = self.Node(dist, a, b, self.count)
+    def addNode(self, obj, val):
+        n = self.Node(val, self.count)
+        self.objs.append(obj)
         self.pushNode(n)
         self.count += 1
 
@@ -71,7 +81,7 @@ class BinTree:
             x = self.root
             a = self.root
             while a != -1:
-                if n.dist >= x.dist:
+                if n.val >= x.val:
                     a = x.right
                     if a == -1:
                         x.right = n
@@ -91,7 +101,7 @@ class BinTree:
                 self.root.parent = -1
             else:
                 self.root = -1
-            return [n.dist, n.a, n.b]
+            return self.objs[n.key]
         else:
             n = self.root
             while n.left != -1:
@@ -101,8 +111,7 @@ class BinTree:
                 n.parent.left = n.right
             else:
                 n.parent.left = -1
-            return [n.dist, n.a, n.b]
-
+            return self.objs[n.key]
 
 
 if __name__ == '__main__':
